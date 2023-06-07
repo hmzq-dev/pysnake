@@ -1,16 +1,11 @@
 import pygame
+from config import *
 import random
 import sys
 
 
 pygame.init()
 
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 400
-FPS = 10
-ENTITY_SIZE = 20
-SNAKE_LENGTH_INITIAL = 6
-FONT_SIZE = 16
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 pygame.display.set_caption("PySnake")
