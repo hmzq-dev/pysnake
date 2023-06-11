@@ -1,0 +1,15 @@
+inputs: (all shoudl be positive abs())
+1. x distance between snake head and apple
+2. y distance between snake head and apple
+3. if can move up
+4. if can move down
+5. if can move right
+6. if can move left
+(yes if not opposite direction, and if theres no wall or snake body)
+
+
+outputs:
+1. switch direction to up
+2. switch direction to down
+3. switch direction to right
+4. switch direction to left

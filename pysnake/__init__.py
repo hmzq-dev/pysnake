@@ -3,8 +3,6 @@ from .game_config import *
 from .sprites import SnakeBody, Apple
 
 
-pygame.init()
-
 
 class Game:
     def __init__(self):
