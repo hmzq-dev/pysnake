@@ -58,6 +58,7 @@ class GameAI(Game):
                 self.reset()
                 break
             
+            # To avoid infinite loops
             if self.score == genome_high_score and timer == FPS*30:
                 genome.fitness -= 3
                 self.reset()
@@ -122,8 +123,45 @@ class GameAI(Game):
                 return 1
 
 
-    def test(self):
-        pass
+    def test(self, genome, config):
+        net = neat.nn.FeedForwardNetwork.create(genome, config)
+        self.started = True
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                self.event_handler(event)
+
+            # AI makes a decision
+            output = net.activate((
+                self.snake[0].rect.x - self.apple.rect.x,
+                self.snake[0].rect.y - self.apple.rect.y,
+                self.can_move("up"),
+                self.can_move("down"),
+                self.can_move("right"),
+                self.can_move("left"),
+            ))
+            decision = output.index(max(output))
+            if decision == 0:
+                self.direction = "up"
+            elif decision == 1:
+                self.direction = "down"
+            elif decision == 2:
+                self.direction = "right"
+            elif decision == 3:
+                self.direction = "left"
+
+            if self.started and not self.snake_is_dead:
+                self.move_snake()
+                self.detect_collisions()
+
+
+            self.draw()
+            pygame.display.flip()
+            self.clock.tick(FPS)
 
 
     def eval_genomes(self, genomes, config):
@@ -143,15 +181,12 @@ class GameAI(Game):
         ))
 
         winner = p.run(self.eval_genomes, 100)
-        with open("best.pickle", "wb") as f:
+        with open("neat-models/best.pickle", "wb") as f:
             pickle.dump(winner, f)
 
 
-if __name__ == "pysnake.ai":
-    # Load the config
+def load_config():
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, "neat-config.txt")
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)
-
-    game = GameAI()
-    game.run_neat(config)
+    return config

@@ -1,15 +1,22 @@
-# import pysnake
-# from pysnake.game_config import *
 import pygame
-# # import sys
+import pickle
 
 pygame.init()
 pygame.font.init()
 
-import pysnake.ai
+from pysnake.ai import GameAI, load_config
 
-# game = GameAI()
-# game.run_neat()
+
+config = load_config()
+game = GameAI()
+
+# Trainig AI
+# game.run_neat(config)
+
+# Testing AI
+with open("neat-models/best.pickle", "rb") as f:
+    winner = pickle.load(f)
+game.test(winner, config)
 
 
 # while True:
