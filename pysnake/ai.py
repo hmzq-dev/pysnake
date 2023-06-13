@@ -2,7 +2,6 @@ import pygame
 import neat
 import os
 import pickle
-import sys
 from .game_config import *
 from . import Game
 
@@ -17,13 +16,9 @@ class GameAI(Game):
         self.started = True
         genome_high_score = 0
         timer = 0
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
 
-                self.event_handler(event)
+        while True:
+            self.handle_events()
 
             # AI makes a decision
             output = net.activate((
@@ -128,12 +123,7 @@ class GameAI(Game):
         self.started = True
 
         while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                self.event_handler(event)
+            self.handle_events()
 
             # AI makes a decision
             output = net.activate((
@@ -157,7 +147,6 @@ class GameAI(Game):
             if self.started and not self.snake_is_dead:
                 self.move_snake()
                 self.detect_collisions()
-
 
             self.draw()
             pygame.display.flip()
@@ -185,7 +174,7 @@ class GameAI(Game):
             pickle.dump(winner, f)
 
 
-def load_config():
+def load_neat_config():
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, "neat-config.txt")
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)

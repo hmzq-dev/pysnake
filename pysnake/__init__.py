@@ -1,6 +1,7 @@
 import pygame
 from .game_config import *
 from .sprites import SnakeBody, Apple
+import sys
 
 
 
@@ -46,22 +47,27 @@ class Game:
                 new_pos = tmp
 
 
-    def event_handler(self, event):
-        if event.type == pygame.KEYDOWN:
-            if self.started:
-                if self.snake_is_dead and event.key == pygame.K_a:
-                    self.reset()
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if self.started:
+                    if self.snake_is_dead and event.key == pygame.K_a:
+                        self.reset()
+                    else:
+                        if event.key == pygame.K_UP and self.direction != "down":
+                            self.direction = "up"
+                        elif event.key == pygame.K_DOWN and self.direction != "up":
+                            self.direction = "down"
+                        elif event.key == pygame.K_RIGHT and self.direction != "left":
+                            self.direction = "right"
+                        elif event.key == pygame.K_LEFT and self.direction != "right":
+                            self.direction = "left"
                 else:
-                    if event.key == pygame.K_UP and self.direction != "down":
-                        self.direction = "up"
-                    elif event.key == pygame.K_DOWN and self.direction != "up":
-                        self.direction = "down"
-                    elif event.key == pygame.K_RIGHT and self.direction != "left":
-                        self.direction = "right"
-                    elif event.key == pygame.K_LEFT and self.direction != "right":
-                        self.direction = "left"
-            else:
-                self.started = True
+                    self.started = True
 
 
     def detect_collisions(self):
